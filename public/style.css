@@ -2,3 +2,7 @@
   width: 100vw;
   height: 100vh;
 }
+
+#app {
+  background-color: #0b0e0e;
+}
