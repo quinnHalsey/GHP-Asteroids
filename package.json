@@ -21,11 +21,14 @@
   "dependencies": {
     "@react-three/drei": "^9.4.2",
     "@react-three/fiber": "^8.0.10",
+    "@react-three/postprocessing": "^2.3.2",
     "file-loader": "^6.2.0",
+    "postprocessing": "^6.26.3",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "three": "^0.139.2"
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
