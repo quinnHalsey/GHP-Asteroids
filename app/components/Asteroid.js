@@ -6,37 +6,42 @@ import * as THREE from "three";
 
 let timer = 0;
 
+const getRandomDetail = () => {
+  const detailArr = [1, 2, 3, 4, 5];
+  return detailArr[Math.floor(Math.random() * 5)];
+};
+
 const Asteroid = (props) => {
   const radius = Math.round((props.diameter * 40) / 12750);
   const distanceConstant =
     Math.round(((props.distance / 100) * 40) / 12750) + 20;
-  const detailArr = [0, 1, 2, 3, 4];
-  const detail = detailArr[Math.floor(Math.random() * 5)];
-  console.log(detail, "detail");
+  const orbitCircumference = Math.round(2 * (props.distance / 2) * Math.PI);
+  const velocityConstant = (props.velocity * 360) / orbitCircumference;
   const asteroidMap = useLoader(TextureLoader, AsteroidTexture);
   const asteroidRef = useRef();
   const hoverRingRef = useRef();
   const ghostRef = useRef();
   const vec = new THREE.Vector3();
+
   useFrame((state) => {
     if (!props.paused) {
       timer++;
-      asteroidRef.current.position.x =
-        distanceConstant * Math.cos(timer / 300) + 0;
-      asteroidRef.current.position.z =
-        distanceConstant * Math.sin(timer / 300) + 0;
     }
+    asteroidRef.current.position.x =
+      distanceConstant * Math.cos(timer * velocityConstant);
+    asteroidRef.current.position.z =
+      distanceConstant * Math.sin(timer * velocityConstant);
+    asteroidRef.current.rotation.z += 0.005;
+    asteroidRef.current.rotation.x += 0.005;
+    asteroidRef.current.rotation.y += 0.005;
     if (props.hover || props.selected) {
-      asteroidRef.current.rotation.z += 0.005;
-      asteroidRef.current.rotation.x += 0.005;
-      asteroidRef.current.rotation.y += 0.005;
-      hoverRingRef.current.position.x =
-        distanceConstant * Math.cos(timer / 300) + 0;
-      hoverRingRef.current.position.z =
-        distanceConstant * Math.sin(timer / 300) + 0;
       hoverRingRef.current.rotation.z += 0.01;
       hoverRingRef.current.rotation.x += 0.01;
       hoverRingRef.current.rotation.y += 0.01;
+      hoverRingRef.current.position.x =
+        distanceConstant * Math.cos(timer * velocityConstant);
+      hoverRingRef.current.position.z =
+        distanceConstant * Math.sin(timer * velocityConstant);
     }
     if (props.resetCamera) {
       state.camera.lookAt(ghostRef.current.position);
@@ -75,12 +80,12 @@ const Asteroid = (props) => {
         onPointerOut={() => props.handleHover()}
         onClick={(event) => props.handleSelect(event)}
       >
-        <dodecahedronGeometry radius={radius} detail={2} />
+        <dodecahedronGeometry radius={radius} detail={getRandomDetail()} />
         <meshBasicMaterial map={asteroidMap} />
       </mesh>
       {props.hover || props.selected ? (
         <mesh ref={hoverRingRef}>
-          <torusGeometry args={[3, 0.5, 23, 79]} />
+          <torusGeometry args={[radius + 1, 0.5, 23, 79]} />
           <meshNormalMaterial
             transparent
             opacity={props.selected ? 1 : 0.3}

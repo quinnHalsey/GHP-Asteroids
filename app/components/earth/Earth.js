@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-// import * as THREE from "three";
+import { connect } from "react-redux";
 import { TextureLoader } from "three";
 import { OrbitControls, Stars } from "@react-three/drei";
 import { useFrame, useLoader } from "@react-three/fiber";
@@ -7,9 +7,7 @@ import EarthCloudsMap from "../../assets/textures/8k_earth_clouds.jpg";
 import EarthDayMap from "../../assets/textures/8k_earth_daymap.jpg";
 import EarthSpecularMap from "../../assets/textures/8k_earth_specular_map.jpg";
 import EarthNormalMap from "../../assets/textures/8k_earth_normal_map.jpg";
-// import EarthNightMap from "../../assets/textures/8k_earth_nightmap.jpg";
-// import AsteroidTexture from "../../assets/textures/asteroid.png";
-
+// import { fetchAsteroids } from "../../store/asteroids";
 import AsteroidClass from "../Asteroid";
 
 const dummyData = [
@@ -61,7 +59,7 @@ const dummyData = [
   },
 ];
 
-export function Earth(props) {
+function Earth(props) {
   const [colorMap, normalMap, specularMap, cloudsMap] = useLoader(
     TextureLoader,
     [EarthDayMap, EarthNormalMap, EarthSpecularMap, EarthCloudsMap]
@@ -79,7 +77,7 @@ export function Earth(props) {
       <ambientLight intensity={0.05} />
       <pointLight color="#f6f3ea" position={[2, 0, 100]} intensity={1.5} />
       <Stars radius={300} depth={10} count={10000} factor={7} fade />
-      {dummyData.map((asteroid) => (
+      {props.asteroids.map((asteroid) => (
         <AsteroidClass
           key={asteroid.id}
           distance={asteroid.close_approach_data[0].miss_distance.kilometers}
@@ -119,3 +117,19 @@ export function Earth(props) {
     </>
   );
 }
+
+// const mapStateToProps = (state) => {
+//   return {
+//     asteroids: state.asteroids,
+//   };
+// };
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     fetchAsteroids: dispatch((date) => fetchAsteroids(date)),
+//   };
+// };
+
+export default Earth;
+
+// export default connect(mapStateToProps, mapDispatchToProps)(Earth);

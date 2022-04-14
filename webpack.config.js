@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = {
   mode: "development",
-  entry: ["./app/index.js"],
+  entry: ["regenerator-runtime/runtime.js", "./app/index.js"],
   output: {
     path: __dirname,
     filename: "./public/bundle.js",
