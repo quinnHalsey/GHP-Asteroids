@@ -8,27 +8,6 @@ import EarthSpecularMap from "../../assets/textures/8k_earth_specular_map.jpg";
 import EarthNormalMap from "../../assets/textures/8k_earth_normal_map.jpg";
 import AsteroidClass from "../Asteroid";
 
-// distance={asteroid.close_approach_data[0].miss_distance.kilometers}
-//           diameter={asteroid.estimated_diameter.meters.estimated_diameter_max}
-//           hazardous={asteroid.is_potentially_hazardous_asteroid}
-//           velocity={
-//             asteroid.close_approach_data[0].relative_velocity
-//               .kilometers_per_second
-//           }
-
-const dummyData = [
-  {
-    id: 1,
-    close_approach_data: [
-      {
-        miss_distance: { kilometers: 100000 },
-        relative_velocity: { kilometers_per_second: 10 },
-      },
-    ],
-    estimated_diameter: { meters: { estimated_diameter_max: 1000 } },
-    is_potentially_hazardous_asteroid: true,
-  },
-];
 function Earth(props) {
   const [colorMap, normalMap, specularMap, cloudsMap] = useLoader(
     TextureLoader,
@@ -42,8 +21,6 @@ function Earth(props) {
       cloudsRef.current.rotation.y += 0.001;
     }
   });
-  const asteroid1 = document.getElementById(1);
-  if (asteroid1) console.log(asteroid1, "asteroid 1");
   return (
     <>
       <ambientLight intensity={0.05} />
@@ -56,23 +33,24 @@ function Earth(props) {
         fade={false}
         saturation={50}
       />
-      {dummyData.map((asteroid, idx) => (
+      {/* {props.asteroids.map((asteroid, idx) => (
         <AsteroidClass
           key={asteroid.id}
-          distance={asteroid.close_approach_data[0].miss_distance.kilometers}
-          diameter={asteroid.estimated_diameter.meters.estimated_diameter_max}
-          hazardous={asteroid.is_potentially_hazardous_asteroid}
-          velocity={
-            asteroid.close_approach_data[0].relative_velocity
-              .kilometers_per_second
-          }
+          asteroid={asteroid}
+          // distance={asteroid.close_approach_data[0].miss_distance.kilometers}
+          // diameter={asteroid.estimated_diameter.meters.estimated_diameter_max}
+          // hazardous={asteroid.is_potentially_hazardous_asteroid}
+          // velocity={
+          //   asteroid.close_approach_data[0].relative_velocity
+          //     .kilometers_per_hour
+          // }
           paused={props.paused}
           pauseOrPlay={props.pauseOrPlay}
           focusCamera={props.focusCamera}
           updateCameraPosition={props.updateCameraPosition}
           cameraPosition={props.cameraPosition}
         />
-      ))}
+      ))} */}
       <mesh ref={cloudsRef}>
         <sphereGeometry args={[20.005, 64, 64]} />
         <meshPhongMaterial

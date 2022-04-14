@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { connect } from "react-redux";
 import { TextureLoader } from "three";
 import { useLoader, useFrame } from "@react-three/fiber";
 import { TransformControls } from "@react-three/drei";
@@ -7,40 +8,43 @@ import * as THREE from "three";
 
 const vec = new THREE.Vector3();
 
-let timer = 0;
+let timer = 20834;
 
 const getRandomDetail = () => {
-  const detailArr = [1, 2, 3, 4, 5];
-  return detailArr[Math.floor(Math.random() * 5)];
+  const detailArr = [1, 3, 5];
+  return detailArr[Math.floor(Math.random() * 3)];
 };
+
+console.log(getRandomDetail());
+console.log(getRandomDetail());
+console.log(getRandomDetail());
+console.log(getRandomDetail());
+console.log(getRandomDetail());
+
 const getRandomAngle = () => {
   const angleArr = [0, 0.1, 0.2, 0.3];
   return angleArr[Math.floor(Math.random() * 4)];
 };
 
 const Asteroid = (props) => {
-  let radius = (props.diameter * 40) / 12750;
+  let radius = props.diameter / 2 / 65; // Asteroids at 100x scale compared to Earth
   let scale = [1, 1, 1];
   if (radius < 1) {
     scale = [radius, radius, radius];
     radius = 1;
   }
-  const distance = Math.round(((props.distance / 10) * 40) / 12750) + 20;
-  const distanceConstant =
-    Math.round(((props.distance / 100) * 40) / 12750) + 20;
+  const toScaleDist = props.distance / 325;
+  const distance = toScaleDist / 1000;
+  const distanceConstant = distance + 20;
   const orbitCircumference = Math.round(2 * (props.distance / 2) * Math.PI);
-  const velocityConstant = (props.velocity * 360) / orbitCircumference;
+  const velocityConstant = (props.velocity * 360) / orbitCircumference / 1000;
   const asteroidMap = useLoader(TextureLoader, AsteroidTexture);
   const asteroidRef = useRef();
   const hoverRingRef = useRef();
   const ghostRef = useRef();
   const orbitRef = useRef();
   useFrame((state) => {
-    orbitRef.current.rotation.x = props.angle;
-    console.log(
-      orbitRef.current.rotation.x,
-      "current angle, should be constant"
-    );
+    // orbitRef.current.rotation.x = props.angle;
     if (!props.paused) {
       timer++;
       // orbitRef.current.rotation.y += 0.01;
@@ -99,7 +103,8 @@ const Asteroid = (props) => {
           onClick={(event) => props.handleSelect(event)}
         >
           <dodecahedronGeometry
-            radius={radius}
+            args={[radius, props.detail]}
+            radius={100}
             detail={props.detail}
             scale={scale}
           />
@@ -175,33 +180,45 @@ class AsteroidClass extends React.Component {
   }
   handleSelect(event) {
     if (this.state.selected) {
-      this.setState({
-        selected: false,
-        hover: true,
-        moveCamera: false,
-        resetCamera: true,
-      });
-      this.resetTimeout = setTimeout(() => {
-        this.setState({ resetCamera: false });
-      }, 5000);
+      //deselect
+      this.props.setSingleAsteroid({});
+      this.setState({ selected: false, moveCamera: false, resetCamera: true });
     } else if (!this.state.selected) {
-      if (!this.props.paused) {
-        this.props.pauseOrPlay();
-      }
-      if (this.resetTimeout) {
-        clearTimeout(this.resetTimeout);
-      }
-      this.setState({ selected: true, hover: false, moveCamera: true });
+      this.props.setSingleAsteroid(this.props.asteroid);
+      this.setState({ selected: true, moveCamera: true, resetCamera: false });
     }
+    // if (this.state.selected) {
+    //   this.setState({
+    //     selected: false,
+    //     hover: true,
+    //     moveCamera: false,
+    //     resetCamera: true,
+    //   });
+    //   this.resetTimeout = setTimeout(() => {
+    //     this.setState({ resetCamera: false });
+    //   }, 5000);
+    // } else if (!this.state.selected) {
+    //   if (!this.props.paused) {
+    //     this.props.pauseOrPlay();
+    //   }
+    //   if (this.resetTimeout) {
+    //     clearTimeout(this.resetTimeout);
+    //   }
+    //   this.setState({ selected: true, hover: false, moveCamera: true });
+    // }
   }
   render() {
+    const asteroid = this.props.asteroid;
     return (
       <>
         <Asteroid
-          distance={this.props.distance}
-          velocity={this.props.velocity}
-          diameter={this.props.diameter}
-          hazardous={this.props.hazardous}
+          distance={asteroid.close_approach_data[0].miss_distance.kilometers}
+          diameter={asteroid.estimated_diameter.meters.estimated_diameter_max}
+          hazardous={asteroid.is_potentially_hazardous_asteroid}
+          velocity={
+            asteroid.close_approach_data[0].relative_velocity
+              .kilometers_per_hour
+          }
           angle={this.state.angle}
           detail={this.state.detail}
           handleHover={this.handleHover}

@@ -5,6 +5,8 @@ import Earth from "./components/earth/Earth";
 import { connect } from "react-redux";
 import { fetchAsteroids } from "./store/asteroids";
 import { toggleAnimation } from "./store/controls";
+import AsteroidClass from "./components/Asteroid";
+import { setSingleAsteroid } from "./store/singleAsteroid";
 
 class App extends React.Component {
   constructor() {
@@ -15,9 +17,16 @@ class App extends React.Component {
     };
     this.pauseOrPlay = this.pauseOrPlay.bind(this);
     this.updateCameraPosition = this.updateCameraPosition.bind(this);
+    this.getSelectStatus = this.getSelectStatus.bind(this);
   }
   componentDidMount() {
     this.props.fetchAsteroids("2022-04-11"); //replace with date chosen
+  }
+  getSelectStatus(asteroid) {
+    if (this.props.singleAsteroid !== undefined) {
+      return this.props.singleAsteroid.id === asteroid.id;
+    }
+    return false;
   }
   pauseOrPlay() {
     if (this.state.paused) {
@@ -42,10 +51,20 @@ class App extends React.Component {
               asteroids={this.props.asteroids}
               paused={this.props.paused}
               pauseOrPlay={this.pauseOrPlay}
-              focusCamera={this.focusCamera}
-              updateCameraPosition={this.updateCameraPosition}
               cameraPosition={this.state.cameraPosition}
             />
+            {this.props.asteroids.map((asteroid, idx) => (
+              <AsteroidClass
+                key={asteroid.id}
+                asteroid={asteroid}
+                setSingleAsteroid={this.props.setSingleAsteroid}
+                paused={this.props.paused}
+                cameraPosition={this.state.cameraPosition}
+                getSelectStatus={this.getSelectStatus}
+                pauseOrPlay={this.pauseOrPlay}
+                updateCameraPosition={this.updateCameraPosition}
+              />
+            ))}
           </Suspense>
         </Canvas>
       </div>
@@ -56,6 +75,7 @@ class App extends React.Component {
 const mapStateToProps = (state) => {
   return {
     asteroids: state.asteroids,
+    singleAsteroid: state.singleAsteroid,
     paused: state.paused,
   };
 };
@@ -63,6 +83,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchAsteroids: (date) => dispatch(fetchAsteroids(date)),
+    setSingleAsteroid: (asteroid) => dispatch(setSingleAsteroid(asteroid)),
     toggleAnimation: (paused) => dispatch(toggleAnimation(paused)),
   };
 };
