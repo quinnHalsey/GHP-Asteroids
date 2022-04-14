@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import { connect } from "react-redux";
 import { TextureLoader } from "three";
 import { OrbitControls, Stars } from "@react-three/drei";
 import { useFrame, useLoader } from "@react-three/fiber";
@@ -7,58 +6,29 @@ import EarthCloudsMap from "../../assets/textures/8k_earth_clouds.jpg";
 import EarthDayMap from "../../assets/textures/8k_earth_daymap.jpg";
 import EarthSpecularMap from "../../assets/textures/8k_earth_specular_map.jpg";
 import EarthNormalMap from "../../assets/textures/8k_earth_normal_map.jpg";
-// import { fetchAsteroids } from "../../store/asteroids";
 import AsteroidClass from "../Asteroid";
+
+// distance={asteroid.close_approach_data[0].miss_distance.kilometers}
+//           diameter={asteroid.estimated_diameter.meters.estimated_diameter_max}
+//           hazardous={asteroid.is_potentially_hazardous_asteroid}
+//           velocity={
+//             asteroid.close_approach_data[0].relative_velocity
+//               .kilometers_per_second
+//           }
 
 const dummyData = [
   {
-    id: "3313974",
-    name: "(2006 BV39)",
-    nasa_jpl_url: "http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=3313974",
-    estimated_diameter: {
-      meters: {
-        estimated_diameter_max: 650,
-      },
-    },
-    is_potentially_hazardous_asteroid: false,
+    id: 1,
     close_approach_data: [
       {
-        close_approach_date_full: "2022-Jan-03 18:46",
-        relative_velocity: {
-          kilometers_per_second: "22.7391653876",
-        },
-        miss_distance: {
-          kilometers: "11000000",
-        },
-        orbiting_body: "Earth",
+        miss_distance: { kilometers: 100000 },
+        relative_velocity: { kilometers_per_second: 10 },
       },
     ],
-  },
-  {
-    id: "3366282",
-    name: "(2007 BD)",
-    nasa_jpl_url: "http://ssd.jpl.nasa.gov/sbdb.cgi?sstr=3366282",
-    estimated_diameter: {
-      meters: {
-        estimated_diameter_max: 500,
-      },
-    },
-    is_potentially_hazardous_asteroid: false,
-    close_approach_data: [
-      {
-        close_approach_date_full: "2022-Jan-03 21:43",
-        relative_velocity: {
-          kilometers_per_second: "19.3262110391",
-        },
-        miss_distance: {
-          kilometers: "2806034",
-        },
-        orbiting_body: "Earth",
-      },
-    ],
+    estimated_diameter: { meters: { estimated_diameter_max: 1000 } },
+    is_potentially_hazardous_asteroid: true,
   },
 ];
-
 function Earth(props) {
   const [colorMap, normalMap, specularMap, cloudsMap] = useLoader(
     TextureLoader,
@@ -72,6 +42,8 @@ function Earth(props) {
       cloudsRef.current.rotation.y += 0.001;
     }
   });
+  const asteroid1 = document.getElementById(1);
+  if (asteroid1) console.log(asteroid1, "asteroid 1");
   return (
     <>
       <ambientLight intensity={0.05} />
@@ -84,7 +56,7 @@ function Earth(props) {
         fade={false}
         saturation={50}
       />
-      {props.asteroids.map((asteroid) => (
+      {dummyData.map((asteroid, idx) => (
         <AsteroidClass
           key={asteroid.id}
           distance={asteroid.close_approach_data[0].miss_distance.kilometers}
@@ -115,7 +87,7 @@ function Earth(props) {
         <meshPhongMaterial specularMap={specularMap} normalMap={normalMap} />
         <meshStandardMaterial map={colorMap} metalness={0.4} roughness={1} />
         <OrbitControls
-          onChange={(event) => console.log(event)} //TO DO: update state on change; do something with the camera panning?
+          // onChange={} //TO DO: update state on change; do something with the camera panning?
           enableZoom={true}
           minDistance={50}
           maxDistance={500}
@@ -126,18 +98,4 @@ function Earth(props) {
   );
 }
 
-// const mapStateToProps = (state) => {
-//   return {
-//     asteroids: state.asteroids,
-//   };
-// };
-
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     fetchAsteroids: dispatch((date) => fetchAsteroids(date)),
-//   };
-// };
-
 export default Earth;
-
-// export default connect(mapStateToProps, mapDispatchToProps)(Earth);

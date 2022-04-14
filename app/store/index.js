@@ -5,9 +5,11 @@ import thunkMiddleware from "redux-thunk";
 import loggingMiddleware from "redux-logger";
 
 import asteroidsReducer from "./asteroids";
+import { animationReducer } from "./controls";
 
 const reducer = combineReducers({
   asteroids: asteroidsReducer,
+  paused: animationReducer,
 });
 
 const store = createStore(

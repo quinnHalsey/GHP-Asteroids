@@ -4,6 +4,7 @@ import Controls from "./components/Controls";
 import Earth from "./components/earth/Earth";
 import { connect } from "react-redux";
 import { fetchAsteroids } from "./store/asteroids";
+import { toggleAnimation } from "./store/controls";
 
 class App extends React.Component {
   constructor() {
@@ -16,7 +17,7 @@ class App extends React.Component {
     this.updateCameraPosition = this.updateCameraPosition.bind(this);
   }
   componentDidMount() {
-    this.props.fetchAsteroids("2022-04-10"); //replace with date chosen
+    this.props.fetchAsteroids("2022-04-11"); //replace with date chosen
   }
   pauseOrPlay() {
     if (this.state.paused) {
@@ -39,7 +40,7 @@ class App extends React.Component {
           <Suspense fallback={null}>
             <Earth
               asteroids={this.props.asteroids}
-              paused={this.state.paused}
+              paused={this.props.paused}
               pauseOrPlay={this.pauseOrPlay}
               focusCamera={this.focusCamera}
               updateCameraPosition={this.updateCameraPosition}
@@ -55,12 +56,14 @@ class App extends React.Component {
 const mapStateToProps = (state) => {
   return {
     asteroids: state.asteroids,
+    paused: state.paused,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchAsteroids: (date) => dispatch(fetchAsteroids(date)),
+    toggleAnimation: (paused) => dispatch(toggleAnimation(paused)),
   };
 };
 

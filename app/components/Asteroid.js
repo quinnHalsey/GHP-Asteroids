@@ -1,14 +1,21 @@
 import React, { useRef } from "react";
 import { TextureLoader } from "three";
 import { useLoader, useFrame } from "@react-three/fiber";
+import { TransformControls } from "@react-three/drei";
 import AsteroidTexture from "../assets/textures/asteroid.png";
 import * as THREE from "three";
+
+const vec = new THREE.Vector3();
 
 let timer = 0;
 
 const getRandomDetail = () => {
   const detailArr = [1, 2, 3, 4, 5];
   return detailArr[Math.floor(Math.random() * 5)];
+};
+const getRandomAngle = () => {
+  const angleArr = [0, 0.1, 0.2, 0.3];
+  return angleArr[Math.floor(Math.random() * 4)];
 };
 
 const Asteroid = (props) => {
@@ -18,6 +25,7 @@ const Asteroid = (props) => {
     scale = [radius, radius, radius];
     radius = 1;
   }
+  const distance = Math.round(((props.distance / 10) * 40) / 12750) + 20;
   const distanceConstant =
     Math.round(((props.distance / 100) * 40) / 12750) + 20;
   const orbitCircumference = Math.round(2 * (props.distance / 2) * Math.PI);
@@ -26,11 +34,16 @@ const Asteroid = (props) => {
   const asteroidRef = useRef();
   const hoverRingRef = useRef();
   const ghostRef = useRef();
-  const vec = new THREE.Vector3();
-
+  const orbitRef = useRef();
   useFrame((state) => {
+    orbitRef.current.rotation.x = props.angle;
+    console.log(
+      orbitRef.current.rotation.x,
+      "current angle, should be constant"
+    );
     if (!props.paused) {
       timer++;
+      // orbitRef.current.rotation.y += 0.01;
     }
     asteroidRef.current.position.x =
       distanceConstant * Math.cos(timer * velocityConstant);
@@ -43,10 +56,7 @@ const Asteroid = (props) => {
       hoverRingRef.current.rotation.z += 0.01;
       hoverRingRef.current.rotation.x += 0.01;
       hoverRingRef.current.rotation.y += 0.01;
-      hoverRingRef.current.position.x =
-        distanceConstant * Math.cos(timer * velocityConstant);
-      hoverRingRef.current.position.z =
-        distanceConstant * Math.sin(timer * velocityConstant);
+      hoverRingRef.current.opacity = 1;
     }
     if (props.resetCamera) {
       state.camera.lookAt(ghostRef.current.position);
@@ -77,26 +87,47 @@ const Asteroid = (props) => {
     }
     return null;
   });
-  if (props.selected) {
-    console.log(props);
-    console.log(radius, "radius");
-  }
   return (
     <>
-      <mesh
-        ref={asteroidRef}
-        onPointerOver={() => props.handleHover()}
-        onPointerOut={() => props.handleHover()}
-        onClick={(event) => props.handleSelect(event)}
-      >
-        <dodecahedronGeometry
-          radius={radius}
-          detail={getRandomDetail()}
-          scale={scale}
-        />
-        <meshBasicMaterial map={asteroidMap} />
-      </mesh>
-      {props.hover || props.selected ? (
+      <object3D ref={orbitRef} position={(0, 0, 0)} rotateX={90}>
+        <mesh
+          name="asteroid"
+          ref={asteroidRef}
+          position={[0, 0, distance]}
+          onPointerOver={() => props.handleHover()}
+          onPointerOut={() => props.handleHover()}
+          onClick={(event) => props.handleSelect(event)}
+        >
+          <dodecahedronGeometry
+            radius={radius}
+            detail={props.detail}
+            scale={scale}
+          />
+          <meshBasicMaterial map={asteroidMap} />
+          {props.hover || props.selected ? (
+            <mesh ref={hoverRingRef}>
+              <torusGeometry
+                args={[radius * 2, 0.5, 23, 79]}
+                scale={scale}
+                position={[0, 0, distance]}
+                opacity={0}
+              />
+              <meshNormalMaterial
+                transparent
+                opacity={props.selected ? 1 : 0.3}
+                reflectivity={1}
+                metalness={1}
+                roughness={0.3}
+                wireframe
+              />
+            </mesh>
+          ) : (
+            <></>
+          )}
+        </mesh>
+      </object3D>
+
+      {/* {props.hover || props.selected ? (
         <mesh ref={hoverRingRef}>
           <torusGeometry args={[radius * 2, 0.5, 23, 79]} scale={scale} />
           <meshNormalMaterial
@@ -110,7 +141,7 @@ const Asteroid = (props) => {
         </mesh>
       ) : (
         <></>
-      )}
+      )} */}
       <mesh ref={ghostRef}>
         <sphereGeometry args={[1, 1, 1]} />
         <meshBasicMaterial color="blue" transparent opacity={0} />
@@ -127,6 +158,8 @@ class AsteroidClass extends React.Component {
       selected: false,
       moveCamera: false,
       resetCamera: false,
+      angle: getRandomAngle(),
+      detail: getRandomDetail(),
     };
     this.handleHover = this.handleHover.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
@@ -169,6 +202,8 @@ class AsteroidClass extends React.Component {
           velocity={this.props.velocity}
           diameter={this.props.diameter}
           hazardous={this.props.hazardous}
+          angle={this.state.angle}
+          detail={this.state.detail}
           handleHover={this.handleHover}
           hover={this.state.hover}
           selected={this.state.selected}
