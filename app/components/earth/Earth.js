@@ -76,7 +76,14 @@ function Earth(props) {
     <>
       <ambientLight intensity={0.05} />
       <pointLight color="#f6f3ea" position={[2, 0, 100]} intensity={1.5} />
-      <Stars radius={300} depth={10} count={10000} factor={7} fade />
+      <Stars
+        radius={1000}
+        depth={50}
+        count={5000}
+        factor={7}
+        fade={false}
+        saturation={50}
+      />
       {props.asteroids.map((asteroid) => (
         <AsteroidClass
           key={asteroid.id}

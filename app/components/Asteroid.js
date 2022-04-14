@@ -12,7 +12,12 @@ const getRandomDetail = () => {
 };
 
 const Asteroid = (props) => {
-  const radius = Math.round((props.diameter * 40) / 12750);
+  let radius = (props.diameter * 40) / 12750;
+  let scale = [1, 1, 1];
+  if (radius < 1) {
+    scale = [radius, radius, radius];
+    radius = 1;
+  }
   const distanceConstant =
     Math.round(((props.distance / 100) * 40) / 12750) + 20;
   const orbitCircumference = Math.round(2 * (props.distance / 2) * Math.PI);
@@ -72,6 +77,10 @@ const Asteroid = (props) => {
     }
     return null;
   });
+  if (props.selected) {
+    console.log(props);
+    console.log(radius, "radius");
+  }
   return (
     <>
       <mesh
@@ -80,12 +89,16 @@ const Asteroid = (props) => {
         onPointerOut={() => props.handleHover()}
         onClick={(event) => props.handleSelect(event)}
       >
-        <dodecahedronGeometry radius={radius} detail={getRandomDetail()} />
+        <dodecahedronGeometry
+          radius={radius}
+          detail={getRandomDetail()}
+          scale={scale}
+        />
         <meshBasicMaterial map={asteroidMap} />
       </mesh>
       {props.hover || props.selected ? (
         <mesh ref={hoverRingRef}>
-          <torusGeometry args={[radius + 1, 0.5, 23, 79]} />
+          <torusGeometry args={[radius * 2, 0.5, 23, 79]} scale={scale} />
           <meshNormalMaterial
             transparent
             opacity={props.selected ? 1 : 0.3}

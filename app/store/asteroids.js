@@ -22,7 +22,8 @@ export const fetchAsteroids = (date) => {
     const asteroids = data.near_earth_objects[date].filter((asteroid) => {
       return (
         Number(asteroid.close_approach_data[0].miss_distance.kilometers) <=
-        11000000
+          11000000 &&
+        Number(asteroid.estimated_diameter.meters.estimated_diameter_max) > 90
       );
     });
     dispatch(getAsteroids(asteroids));

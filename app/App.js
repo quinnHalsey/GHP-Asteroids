@@ -29,7 +29,6 @@ class App extends React.Component {
     this.setState({ cameraPosition });
   }
   render() {
-    console.log(this.props.asteroids);
     return (
       <div id="canvas-container">
         <Controls pauseOrPlay={this.pauseOrPlay} />
