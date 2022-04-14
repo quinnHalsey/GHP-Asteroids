@@ -6,9 +6,11 @@ import loggingMiddleware from "redux-logger";
 
 import asteroidsReducer from "./asteroids";
 import singleAsteroidReducer from "./singleAsteroid";
+import dateReducer from "./date";
 import { animationReducer } from "./controls";
 
 const reducer = combineReducers({
+  date: dateReducer,
   asteroids: asteroidsReducer,
   singleAsteroid: singleAsteroidReducer,
   paused: animationReducer,

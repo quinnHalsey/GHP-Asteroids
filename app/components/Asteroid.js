@@ -15,12 +15,6 @@ const getRandomDetail = () => {
   return detailArr[Math.floor(Math.random() * 3)];
 };
 
-console.log(getRandomDetail());
-console.log(getRandomDetail());
-console.log(getRandomDetail());
-console.log(getRandomDetail());
-console.log(getRandomDetail());
-
 const getRandomAngle = () => {
   const angleArr = [0, 0.1, 0.2, 0.3];
   return angleArr[Math.floor(Math.random() * 4)];
@@ -44,6 +38,15 @@ const Asteroid = (props) => {
   const hoverRingRef = useRef();
   // const ghostRef = useRef();
   const orbitRef = useRef();
+
+  let cameraConst = 20;
+  if (distance > 5000000) {
+    cameraConst += 20;
+  }
+  if (radius > 5) {
+    cameraConst += 20;
+  }
+
   useFrame((state) => {
     // orbitRef.current.rotation.x = props.angle;
     if (!props.paused) {
@@ -87,7 +90,7 @@ const Asteroid = (props) => {
         vec.set(
           asteroidRef.current.position.x,
           0,
-          asteroidRef.current.position.z + 20
+          asteroidRef.current.position.z + cameraConst
         ),
         0.05
       );

@@ -24,9 +24,54 @@ body,
   text-align: center;
 }
 
+#control-panel {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  width: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 10;
+}
+
+#date-container {
+  background-color: purple;
+  height: 50px;
+  width: 100vw;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  z-index: 5;
+  left: auto;
+  right: auto;
+  top: 0;
+}
+
+.date-picker {
+  height: auto;
+  color: rgb(225, 225, 225);
+  display: flex;
+  justify-content: center;
+  top: 20px;
+  position: absolute;
+  left: 100px;
+  right: 100px;
+  z-index: 10;
+}
 .details-list {
   text-align: left;
   font-size: 15px;
+}
+
+input {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 20px;
+  background-color: rgba(240, 248, 255, 0.699);
+  text-align: center;
+  outline: none;
+  border: none;
 }
 
 .details-list > p {

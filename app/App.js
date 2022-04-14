@@ -1,13 +1,14 @@
 import React, { Suspense } from "react";
 import { Canvas, useRef } from "@react-three/fiber";
 import Controls from "./components/Controls";
-import Earth from "./components/earth/Earth";
+import Earth from "./components/Earth";
 import { connect } from "react-redux";
 import { fetchAsteroids } from "./store/asteroids";
 import { toggleAnimation } from "./store/controls";
 import AsteroidClass from "./components/Asteroid";
 import { setSingleAsteroid } from "./store/singleAsteroid";
 import SingleAsteroid from "./components/SingleAsteroid";
+import DateContainer from "./components/Date";
 
 class App extends React.Component {
   constructor() {
@@ -22,7 +23,12 @@ class App extends React.Component {
     this.getSelectStatus = this.getSelectStatus.bind(this);
   }
   componentDidMount() {
-    this.props.fetchAsteroids("2022-02-11"); //replace with date chosen
+    this.props.fetchAsteroids(this.props.date); //replace with date chosen
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.date !== this.props.date) {
+      this.props.fetchAsteroids(this.props.date);
+    }
   }
   getSelectStatus(asteroid) {
     if (this.props.singleAsteroid !== undefined) {
@@ -44,6 +50,7 @@ class App extends React.Component {
     return (
       <div id="canvas-container">
         <Controls pauseOrPlay={this.pauseOrPlay} />
+        <DateContainer />
         {this.props.singleAsteroid.id ? (
           <SingleAsteroid asteroid={this.props.singleAsteroid} />
         ) : (
@@ -87,6 +94,7 @@ class App extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    date: state.date,
     asteroids: state.asteroids,
     singleAsteroid: state.singleAsteroid,
     paused: state.paused,

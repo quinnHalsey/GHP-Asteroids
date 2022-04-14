@@ -9,7 +9,7 @@ function Controls(props) {
         type="button"
         onClick={() => props.toggleAnimation(!props.paused)}
       >
-        Pause
+        {props.paused ? "Play" : "Pause"}
       </button>
     </div>
   );
