@@ -15,6 +15,7 @@ function Earth(props) {
   );
   const earthRef = useRef();
   const cloudsRef = useRef();
+
   useFrame(() => {
     if (!props.paused) {
       earthRef.current.rotation.y += 0.001;

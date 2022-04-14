@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useRef } from "@react-three/fiber";
 import Controls from "./components/Controls";
 import Earth from "./components/earth/Earth";
 import { connect } from "react-redux";
@@ -7,6 +7,7 @@ import { fetchAsteroids } from "./store/asteroids";
 import { toggleAnimation } from "./store/controls";
 import AsteroidClass from "./components/Asteroid";
 import { setSingleAsteroid } from "./store/singleAsteroid";
+import SingleAsteroid from "./components/SingleAsteroid";
 
 class App extends React.Component {
   constructor() {
@@ -15,12 +16,13 @@ class App extends React.Component {
       paused: false,
       cameraPosition: [0, 0, 50],
     };
+    this.ghostRef = React.createRef();
     this.pauseOrPlay = this.pauseOrPlay.bind(this);
     this.updateCameraPosition = this.updateCameraPosition.bind(this);
     this.getSelectStatus = this.getSelectStatus.bind(this);
   }
   componentDidMount() {
-    this.props.fetchAsteroids("2022-04-11"); //replace with date chosen
+    this.props.fetchAsteroids("2022-02-11"); //replace with date chosen
   }
   getSelectStatus(asteroid) {
     if (this.props.singleAsteroid !== undefined) {
@@ -42,6 +44,11 @@ class App extends React.Component {
     return (
       <div id="canvas-container">
         <Controls pauseOrPlay={this.pauseOrPlay} />
+        {this.props.singleAsteroid.id ? (
+          <SingleAsteroid asteroid={this.props.singleAsteroid} />
+        ) : (
+          <></>
+        )}
         <Canvas
           dpr={window.devicePixelRatio}
           camera={{ position: this.state.cameraPosition, near: 1, far: 10000 }}
@@ -57,6 +64,8 @@ class App extends React.Component {
               <AsteroidClass
                 key={asteroid.id}
                 asteroid={asteroid}
+                ghostRef={this.ghostRef}
+                singleAsteroid={this.props.singleAsteroid}
                 setSingleAsteroid={this.props.setSingleAsteroid}
                 paused={this.props.paused}
                 cameraPosition={this.state.cameraPosition}
@@ -65,6 +74,10 @@ class App extends React.Component {
                 updateCameraPosition={this.updateCameraPosition}
               />
             ))}
+            <mesh ref={this.ghostRef}>
+              <sphereGeometry args={[0, 1, 1]} />
+              <meshBasicMaterial color="blue" transparent opacity={0} />
+            </mesh>
           </Suspense>
         </Canvas>
       </div>

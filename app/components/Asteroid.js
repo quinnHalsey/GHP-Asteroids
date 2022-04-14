@@ -27,6 +27,7 @@ const getRandomAngle = () => {
 };
 
 const Asteroid = (props) => {
+  const ghostRef = props.ghostRef;
   let radius = props.diameter / 2 / 65; // Asteroids at 100x scale compared to Earth
   let scale = [1, 1, 1];
   if (radius < 1) {
@@ -41,7 +42,7 @@ const Asteroid = (props) => {
   const asteroidMap = useLoader(TextureLoader, AsteroidTexture);
   const asteroidRef = useRef();
   const hoverRingRef = useRef();
-  const ghostRef = useRef();
+  // const ghostRef = useRef();
   const orbitRef = useRef();
   useFrame((state) => {
     // orbitRef.current.rotation.x = props.angle;
@@ -60,6 +61,10 @@ const Asteroid = (props) => {
       hoverRingRef.current.rotation.z += 0.01;
       hoverRingRef.current.rotation.x += 0.01;
       hoverRingRef.current.rotation.y += 0.01;
+    }
+    if (props.hover) {
+      hoverRingRef.current.opacity = 0.05;
+    } else if (props.selected) {
       hoverRingRef.current.opacity = 1;
     }
     if (props.resetCamera) {
@@ -68,7 +73,7 @@ const Asteroid = (props) => {
       state.camera.updateProjectionMatrix();
       props.updateCameraPosition(state.camera.position);
     }
-    if (props.moveCamera) {
+    if (props.selected) {
       state.camera.lookAt(ghostRef.current.position);
       ghostRef.current.position.lerp(
         vec.set(
@@ -80,9 +85,9 @@ const Asteroid = (props) => {
       );
       state.camera.position.lerp(
         vec.set(
-          asteroidRef.current.position.x + 10,
-          asteroidRef.current.position.y,
-          asteroidRef.current.position.z + 10
+          asteroidRef.current.position.x,
+          0,
+          asteroidRef.current.position.z + 20
         ),
         0.05
       );
@@ -99,20 +104,15 @@ const Asteroid = (props) => {
           ref={asteroidRef}
           position={[0, 0, distance]}
           onPointerOver={() => props.handleHover()}
-          onPointerOut={() => props.handleHover()}
+          onPointerOut={() => props.handleHoverOut()}
           onClick={(event) => props.handleSelect(event)}
         >
-          <dodecahedronGeometry
-            args={[radius, props.detail]}
-            radius={100}
-            detail={props.detail}
-            scale={scale}
-          />
+          <dodecahedronGeometry args={[radius, props.detail]} scale={scale} />
           <meshBasicMaterial map={asteroidMap} />
           {props.hover || props.selected ? (
             <mesh ref={hoverRingRef}>
               <torusGeometry
-                args={[radius * 2, 0.5, 23, 79]}
+                args={[radius * 2, radius / 5, 23, 79]}
                 scale={scale}
                 position={[0, 0, distance]}
                 opacity={0}
@@ -131,26 +131,10 @@ const Asteroid = (props) => {
           )}
         </mesh>
       </object3D>
-
-      {/* {props.hover || props.selected ? (
-        <mesh ref={hoverRingRef}>
-          <torusGeometry args={[radius * 2, 0.5, 23, 79]} scale={scale} />
-          <meshNormalMaterial
-            transparent
-            opacity={props.selected ? 1 : 0.3}
-            reflectivity={1}
-            metalness={1}
-            roughness={0.3}
-            wireframe
-          />
-        </mesh>
-      ) : (
-        <></>
-      )} */}
-      <mesh ref={ghostRef}>
+      {/* <mesh ref={ghostRef}>
         <sphereGeometry args={[1, 1, 1]} />
-        <meshBasicMaterial color="blue" transparent opacity={0} />
-      </mesh>
+        <meshBasicMaterial color="blue" transparent opacity={0.5} />
+      </mesh> */}
     </>
   );
 };
@@ -160,32 +144,51 @@ class AsteroidClass extends React.Component {
     super(props);
     this.state = {
       hover: false,
-      selected: false,
-      moveCamera: false,
+      selected: this.props.singleAsteroid.id === this.props.asteroid.id,
+      moveCamera: this.props.singleAsteroid.id === this.props.asteroid.id,
       resetCamera: false,
       angle: getRandomAngle(),
       detail: getRandomDetail(),
     };
     this.handleHover = this.handleHover.bind(this);
+    this.handleHoverOut = this.handleHoverOut.bind(this);
+
     this.handleSelect = this.handleSelect.bind(this);
     this.resetTimeout = null;
   }
   handleHover() {
-    if (this.state.hover) {
-      const timeout = this.props.paused ? 0 : 700;
-      setTimeout(() => this.setState({ hover: false }), timeout);
+    if (this.props.singleAsteroid.id === this.props.asteroid.id) {
+      console.log("in first if, should stop");
+      return null;
     } else if (!this.state.hover) {
       this.setState({ hover: true });
     }
+    // } else {
+    //   if (this.state.hover) {
+    //     console.log("in second if");
+    //     const timeout = this.props.paused ? 0 : 700;
+    //     setTimeout(() => this.setState({ hover: false }), timeout);
+    //   } else if (!this.state.hover) {
+    //     console.log("in third if");
+    //     this.setState({ hover: true });
+    //   }
+    // }
+  }
+  handleHoverOut() {
+    if (this.state.hover) {
+      const timeout = this.props.paused ? 0 : 700;
+      setTimeout(() => this.setState({ hover: false }), timeout);
+    }
   }
   handleSelect(event) {
-    if (this.state.selected) {
+    if (this.props.singleAsteroid.id === this.props.asteroid.id) {
       //deselect
+      console.log("inside handle select");
       this.props.setSingleAsteroid({});
-      this.setState({ selected: false, moveCamera: false, resetCamera: true });
-    } else if (!this.state.selected) {
+      this.setState({ resetCamera: true });
+    } else if (this.props.singleAsteroid.id !== this.props.asteroid.id) {
       this.props.setSingleAsteroid(this.props.asteroid);
-      this.setState({ selected: true, moveCamera: true, resetCamera: false });
+      this.setState({ resetCamera: false, hover: false });
     }
     // if (this.state.selected) {
     //   this.setState({
@@ -208,7 +211,13 @@ class AsteroidClass extends React.Component {
     // }
   }
   render() {
+    // console.log(this.state, "asteroid state");
+    // console.log(this.props.singleAsteroid);
     const asteroid = this.props.asteroid;
+    // console.log(
+    //   this.props.singleAsteroid.id === this.props.asteroid.id,
+    //   "selected?"
+    // );
     return (
       <>
         <Asteroid
@@ -219,16 +228,18 @@ class AsteroidClass extends React.Component {
             asteroid.close_approach_data[0].relative_velocity
               .kilometers_per_hour
           }
+          ghostRef={this.props.ghostRef}
+          selected={this.props.singleAsteroid.id === this.props.asteroid.id}
           angle={this.state.angle}
           detail={this.state.detail}
-          handleHover={this.handleHover}
           hover={this.state.hover}
-          selected={this.state.selected}
-          handleSelect={this.handleSelect}
           paused={this.props.paused}
           moveCamera={this.state.moveCamera}
           updateCameraPosition={this.props.updateCameraPosition}
           resetCamera={this.state.resetCamera}
+          handleHover={this.handleHover}
+          handleHoverOut={this.handleHoverOut}
+          handleSelect={this.handleSelect}
         />
       </>
     );

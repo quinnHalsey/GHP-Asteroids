@@ -5,8 +5,42 @@ body,
   height: 100vh;
   margin: 0;
   padding: 0;
+  font-family: "Courier New", Courier, monospace;
 }
 
 #app {
   background-color: #0b0e0e;
+}
+
+#single-asteroid-info {
+  background-color: rgba(240, 248, 255, 0.334);
+  height: auto;
+  width: 300px;
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.details-list {
+  text-align: left;
+  font-size: 15px;
+}
+
+.details-list > p {
+  margin-bottom: 0;
+}
+
+.hazard {
+  color: rgb(255, 120, 120);
+}
+
+.non-hazard {
+  color: rgb(142, 255, 142);
+}
+h1 {
+  margin: 0;
+  max-width: 300px;
 }
