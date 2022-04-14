@@ -60,6 +60,10 @@ body,
   right: 100px;
   z-index: 10;
 }
+
+.animation-button {
+  color: white;
+}
 .details-list {
   text-align: left;
   font-size: 15px;
@@ -67,7 +71,7 @@ body,
 
 input {
   font-family: "Courier New", Courier, monospace;
-  font-size: 20px;
+  font-size: 25px;
   background-color: rgba(240, 248, 255, 0.699);
   text-align: center;
   outline: none;
