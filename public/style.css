@@ -72,6 +72,18 @@ input {
   text-align: center;
   outline: none;
   border: none;
+  width: 290px;
+}
+
+.error {
+  color: rgb(255, 135, 135);
+  font-size: 13px;
+  margin-top: 3px;
+}
+
+.error > p {
+  margin: 0;
+  text-align: center;
 }
 
 .details-list > p {

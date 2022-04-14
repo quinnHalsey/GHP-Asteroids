@@ -8,9 +8,11 @@ class DateContainer extends React.Component {
     this.state = {
       userInput: false,
       date: this.props.date || "2022-01-02",
+      dateError: false,
     };
     this.setUpDateChange = this.setUpDateChange.bind(this);
     this.handleDateSubmit = this.handleDateSubmit.bind(this);
+    this.checkDateValidity = this.checkDateValidity.bind(this);
   }
   setUpDateChange() {
     console.log("clicked");
@@ -18,6 +20,21 @@ class DateContainer extends React.Component {
   }
   handleDateInput(event) {
     this.setState({ date: event.target.value });
+  }
+  checkDateValidity(date) {
+    const alpha = `abcdefghijklmnopqrstuvwxyz'/?<>+{}[]`;
+    if (date.length < 10 || date.length > 10) {
+      this.setState({ dateError: true });
+      return false;
+    }
+    for (let i = 0; i < date.length; i++) {
+      if (alpha.includes(date[i])) {
+        this.setState({ dateError: true });
+        return false;
+      }
+    }
+    this.setState({ dateError: false });
+    return true;
   }
   handleDateSubmit(event) {
     event.preventDefault();
@@ -38,6 +55,14 @@ class DateContainer extends React.Component {
                 onChange={(event) => this.handleDateInput(event)}
               />
             </form>
+            {this.state.dateError ? (
+              <div className="error">
+                <p>Invalid date.</p>
+                <p>Dates much be in the form YYYY/MM/DD.</p>
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         ) : (
           <h1 onClick={this.setUpDateChange}>{this.state.date}</h1>

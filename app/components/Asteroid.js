@@ -29,7 +29,7 @@ const Asteroid = (props) => {
     radius = 1;
   }
   const toScaleDist = props.distance / 325;
-  const distance = toScaleDist / 1000;
+  const distance = toScaleDist / 500;
   const distanceConstant = distance + 20;
   const orbitCircumference = Math.round(2 * (props.distance / 2) * Math.PI);
   const velocityConstant = (props.velocity * 360) / orbitCircumference / 1000;
