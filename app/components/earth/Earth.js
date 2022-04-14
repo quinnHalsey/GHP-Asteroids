@@ -115,6 +115,7 @@ function Earth(props) {
         <meshPhongMaterial specularMap={specularMap} normalMap={normalMap} />
         <meshStandardMaterial map={colorMap} metalness={0.4} roughness={1} />
         <OrbitControls
+          onChange={(event) => console.log(event)} //TO DO: update state on change; do something with the camera panning?
           enableZoom={true}
           minDistance={50}
           maxDistance={500}
