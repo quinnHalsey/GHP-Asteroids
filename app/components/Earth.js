@@ -33,24 +33,6 @@ function Earth(props) {
         fade={false}
         saturation={50}
       />
-      {/* {props.asteroids.map((asteroid, idx) => (
-        <AsteroidClass
-          key={asteroid.id}
-          asteroid={asteroid}
-          // distance={asteroid.close_approach_data[0].miss_distance.kilometers}
-          // diameter={asteroid.estimated_diameter.meters.estimated_diameter_max}
-          // hazardous={asteroid.is_potentially_hazardous_asteroid}
-          // velocity={
-          //   asteroid.close_approach_data[0].relative_velocity
-          //     .kilometers_per_hour
-          // }
-          paused={props.paused}
-          pauseOrPlay={props.pauseOrPlay}
-          focusCamera={props.focusCamera}
-          updateCameraPosition={props.updateCameraPosition}
-          cameraPosition={props.cameraPosition}
-        />
-      ))} */}
       <mesh ref={cloudsRef}>
         <sphereGeometry args={[20.005, 64, 64]} />
         <meshPhongMaterial
@@ -65,7 +47,6 @@ function Earth(props) {
         <meshPhongMaterial specularMap={specularMap} normalMap={normalMap} />
         <meshStandardMaterial map={colorMap} metalness={0.4} roughness={1} />
         <OrbitControls
-          // onChange={} //TO DO: update state on change; do something with the camera panning?
           enableZoom={true}
           minDistance={50}
           maxDistance={500}

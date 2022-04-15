@@ -15,12 +15,6 @@ function Controls(props) {
           <PauseIcon className="animation-button" />
         )}
       </IconButton>
-      {/* <button
-        type="button"
-        onClick={() => props.toggleAnimation(!props.paused)}
-      >
-        {props.paused ? "Play" : "Pause"}
-      </button> */}
     </div>
   );
 }
