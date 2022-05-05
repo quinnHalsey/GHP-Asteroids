@@ -10,6 +10,9 @@
     "start:dev": "npm run build:dev & npm run start",
     "start-server": "JWT=shh nodemon server -e html,js,scss --ignore public --ignore client"
   },
+  "engines": {
+    "node": "16.13.1"
+  },
   "author": "",
   "license": "ISC",
   "eslintConfig": {
