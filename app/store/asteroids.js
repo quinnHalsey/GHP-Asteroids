@@ -1,5 +1,4 @@
 import Axios from "axios";
-import regenerator from "regenerator-runtime/runtime";
 
 const apiKey = "wkojjdAHb00oQ2lTPmFNXob4MynVBnyJ9efXjY8d";
 
