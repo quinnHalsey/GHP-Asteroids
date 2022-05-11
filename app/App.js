@@ -23,7 +23,7 @@ class App extends React.Component {
     this.getSelectStatus = this.getSelectStatus.bind(this);
   }
   componentDidMount() {
-    this.props.fetchAsteroids(this.props.date); //replace with date chosen
+    this.props.fetchAsteroids(this.props.date);
   }
   componentDidUpdate(prevProps) {
     if (prevProps.date !== this.props.date) {
@@ -110,5 +110,3 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
-
-// export default connect(mapStateToProps)(App);

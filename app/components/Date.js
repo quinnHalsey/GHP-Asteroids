@@ -15,7 +15,6 @@ class DateContainer extends React.Component {
     this.checkDateValidity = this.checkDateValidity.bind(this);
   }
   setUpDateChange() {
-    console.log("clicked");
     this.setState({ userInput: true });
   }
   handleDateInput(event) {
@@ -44,7 +43,6 @@ class DateContainer extends React.Component {
     }
   }
   render() {
-    console.log(this.state);
     return (
       <div className="date-picker">
         {this.state.userInput ? (

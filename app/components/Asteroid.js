@@ -1,8 +1,6 @@
 import React, { useRef } from "react";
-import { connect } from "react-redux";
 import { TextureLoader } from "three";
 import { useLoader, useFrame } from "@react-three/fiber";
-import { TransformControls } from "@react-three/drei";
 import AsteroidTexture from "../assets/textures/asteroid.png";
 import * as THREE from "three";
 
@@ -22,7 +20,7 @@ const getRandomAngle = () => {
 
 const Asteroid = (props) => {
   const ghostRef = props.ghostRef;
-  let radius = props.diameter / 2 / 65; // Asteroids at 100x scale compared to Earth
+  let radius = props.diameter / 2 / 65;
   let scale = [1, 1, 1];
   if (radius < 1) {
     scale = [radius, radius, radius];
@@ -36,7 +34,6 @@ const Asteroid = (props) => {
   const asteroidMap = useLoader(TextureLoader, AsteroidTexture);
   const asteroidRef = useRef();
   const hoverRingRef = useRef();
-  // const ghostRef = useRef();
   const orbitRef = useRef();
 
   let cameraConst = 20;
@@ -48,10 +45,8 @@ const Asteroid = (props) => {
   }
 
   useFrame((state) => {
-    // orbitRef.current.rotation.x = props.angle;
     if (!props.paused) {
       timer++;
-      // orbitRef.current.rotation.y += 0.01;
     }
     asteroidRef.current.position.x =
       distanceConstant * Math.cos(timer * velocityConstant);
@@ -99,6 +94,7 @@ const Asteroid = (props) => {
     }
     return null;
   });
+
   return (
     <>
       <object3D ref={orbitRef} position={(0, 0, 0)} rotateX={90}>
@@ -134,10 +130,6 @@ const Asteroid = (props) => {
           )}
         </mesh>
       </object3D>
-      {/* <mesh ref={ghostRef}>
-        <sphereGeometry args={[1, 1, 1]} />
-        <meshBasicMaterial color="blue" transparent opacity={0.5} />
-      </mesh> */}
     </>
   );
 };
@@ -159,68 +151,35 @@ class AsteroidClass extends React.Component {
     this.handleSelect = this.handleSelect.bind(this);
     this.resetTimeout = null;
   }
+
   handleHover() {
     if (this.props.singleAsteroid.id === this.props.asteroid.id) {
-      console.log("in first if, should stop");
       return null;
     } else if (!this.state.hover) {
       this.setState({ hover: true });
     }
-    // } else {
-    //   if (this.state.hover) {
-    //     console.log("in second if");
-    //     const timeout = this.props.paused ? 0 : 700;
-    //     setTimeout(() => this.setState({ hover: false }), timeout);
-    //   } else if (!this.state.hover) {
-    //     console.log("in third if");
-    //     this.setState({ hover: true });
-    //   }
-    // }
   }
+
   handleHoverOut() {
     if (this.state.hover) {
       const timeout = this.props.paused ? 0 : 700;
       setTimeout(() => this.setState({ hover: false }), timeout);
     }
   }
+
   handleSelect(event) {
     if (this.props.singleAsteroid.id === this.props.asteroid.id) {
-      //deselect
-      console.log("inside handle select");
       this.props.setSingleAsteroid({});
       this.setState({ resetCamera: true });
     } else if (this.props.singleAsteroid.id !== this.props.asteroid.id) {
       this.props.setSingleAsteroid(this.props.asteroid);
       this.setState({ resetCamera: false, hover: false });
     }
-    // if (this.state.selected) {
-    //   this.setState({
-    //     selected: false,
-    //     hover: true,
-    //     moveCamera: false,
-    //     resetCamera: true,
-    //   });
-    //   this.resetTimeout = setTimeout(() => {
-    //     this.setState({ resetCamera: false });
-    //   }, 5000);
-    // } else if (!this.state.selected) {
-    //   if (!this.props.paused) {
-    //     this.props.pauseOrPlay();
-    //   }
-    //   if (this.resetTimeout) {
-    //     clearTimeout(this.resetTimeout);
-    //   }
-    //   this.setState({ selected: true, hover: false, moveCamera: true });
-    // }
   }
+
   render() {
-    // console.log(this.state, "asteroid state");
-    // console.log(this.props.singleAsteroid);
     const asteroid = this.props.asteroid;
-    // console.log(
-    //   this.props.singleAsteroid.id === this.props.asteroid.id,
-    //   "selected?"
-    // );
+
     return (
       <>
         <Asteroid
