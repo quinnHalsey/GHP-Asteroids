@@ -1,11 +1,13 @@
 const path = require("path");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  mode: "development",
+  mode: "production",
   entry: ["regenerator-runtime/runtime.js", "./app/index.js"],
   output: {
-    path: __dirname,
-    filename: "./public/bundle.js",
+    filename: "main.js",
+    path: path.resolve(__dirname, "dist"),
   },
   devtool: "source-map",
   module: {
@@ -31,12 +33,12 @@ module.exports = {
       },
     ],
   },
-  devServer: {
-    static: {
-      directory: path.join(__dirname, "public"),
-    },
-    compress: true,
-    hot: true,
-    port: 3000,
-  },
+  plugins: [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      filename: "index.html",
+      inject: true,
+      template: path.resolve(__dirname, "app", "index.html"),
+    }),
+  ],
 };

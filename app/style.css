@@ -1,0 +1,107 @@
+html,
+body,
+#canvas-container {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: "Courier New", Courier, monospace;
+}
+
+#app {
+  background-color: #0b0e0e;
+}
+
+#single-asteroid-info {
+  background-color: rgba(240, 248, 255, 0.334);
+  height: auto;
+  width: 300px;
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+#control-panel {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  width: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 10;
+}
+
+#date-container {
+  background-color: purple;
+  height: 50px;
+  width: 100vw;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  z-index: 5;
+  left: auto;
+  right: auto;
+  top: 0;
+}
+
+.date-picker {
+  height: auto;
+  color: rgb(225, 225, 225);
+  display: flex;
+  justify-content: center;
+  top: 20px;
+  position: absolute;
+  left: 100px;
+  right: 100px;
+  z-index: 10;
+}
+
+.animation-button {
+  color: white;
+}
+.details-list {
+  text-align: left;
+  font-size: 15px;
+}
+
+input {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 25px;
+  background-color: rgba(240, 248, 255, 0.699);
+  text-align: center;
+  outline: none;
+  border: none;
+  width: 290px;
+}
+
+.error {
+  color: rgb(255, 135, 135);
+  font-size: 13px;
+  margin-top: 3px;
+}
+
+.error > p {
+  margin: 0;
+  text-align: center;
+}
+
+.details-list > p {
+  margin-bottom: 0;
+}
+
+.hazard {
+  color: rgb(255, 120, 120);
+}
+
+.non-hazard {
+  color: rgb(142, 255, 142);
+}
+h1 {
+  margin: 0;
+  max-width: 300px;
+}
