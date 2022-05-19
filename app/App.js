@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { Canvas, useRef } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import Controls from "./components/Controls";
 import Earth from "./components/Earth";
 import { connect } from "react-redux";

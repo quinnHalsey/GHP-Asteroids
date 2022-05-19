@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { TextureLoader } from "three";
 import { OrbitControls, Stars } from "@react-three/drei";
 import { useFrame, useLoader } from "@react-three/fiber";
+
 import EarthCloudsMap from "../assets/textures/8k_earth_clouds.jpg";
 import EarthDayMap from "../assets/textures/8k_earth_daymap.jpg";
 import EarthSpecularMap from "../assets/textures/8k_earth_specular_map.jpg";
