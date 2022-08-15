@@ -10,16 +10,12 @@ Users can input any date covered by the API allowing for over 70,000 possible sc
 
 ## Built With
 
-<ul>
-    <li> 
-        [Nasa's Asteroid NeoWs API](https://api.nasa.gov/)
-    </li>
-    <li>React</li>
-    <li>Redux</li>
-    <li>Three.js</li>
-    <li>react-three/fiber</li>
-    <li>react-tree/drei</li>
-</ul>
+- [Nasa's Asteroid NeoWs API](https://api.nasa.gov/)
+- React
+- Redux
+- Three.js
+- react-three/fiber
+- react-three/drei
 
 ## Resources
 
