@@ -19,7 +19,7 @@ Users can input any date covered by the API allowing for over 70,000 possible sc
 
 ## Resources
 
-[Three.js 3d Earth Tutorial](https://www.youtube.com/watch?v=ymavtyRpT0E)
+[Three.js 3D Earth Tutorial](https://www.youtube.com/watch?v=ymavtyRpT0E)
 
 ## License
 
