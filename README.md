@@ -11,7 +11,9 @@ Users can input any date covered by the API allowing for over 70,000 possible sc
 ## Built With
 
 <ul>
-    <li>[Nasa's Asteroid NeoWs (Near Earth Object Web Service API](https://api.nasa.gov/)</li>
+    <li> 
+        [Nasa's Asteroid NeoWs API](https://api.nasa.gov/)
+    </li>
     <li>React</li>
     <li>Redux</li>
     <li>Three.js</li>
